@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pageBackColor"
+    tools:context=".MainActivity">
+
+    <com.example.shinedrive.util.SlideMenu
+        android:id="@+id/slideMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/page_background">
+
+        <!--        菜单界面-->
+        <include layout="@layout/layout_menu"/>
+
+        <!--        主界面-->
+        <include layout="@layout/layout_main"/>
+
+    </com.example.shinedrive.util.SlideMenu>
+</LinearLayout>

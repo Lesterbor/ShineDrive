@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ShineDrive" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.ShineDrive" parent="Base.Theme.ShineDrive">
+
+    </style>
+
+    <declare-styleable name="ControllerView">
+        <attr name="fingerColor" format="color" />
+        <attr name="borderColor" format="color" />
+        <attr name="fingerSize" format="dimension" />
+        <attr name="radius" format="dimension" />
+    </declare-styleable>
+
+</resources>
