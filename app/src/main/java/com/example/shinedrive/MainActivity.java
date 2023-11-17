@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
     private int RightRockerX = 0;
     private int RightRockerY = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     //左摇杆回调函数
     private final View.OnTouchListener LeftRockerOnTouch = new View.OnTouchListener() {
         @SuppressLint({"ClickableViewAccessibility", "DefaultLocale"})
@@ -231,11 +232,13 @@ public class MainActivity extends AppCompatActivity {
                     sendRockerData(LeftRockerX,LeftRockerY,RightRockerX,RightRockerY);
                     break;
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                     MainActivity.this.wheelLeftRocker.setTranslationX(0);
                     MainActivity.this.wheelLeftRocker.setTranslationY(0);
                     MainActivity.this.LeftRockerX = 0;
                     MainActivity.this.LeftRockerY = 0;
-                    sendRockerData(0,0,RightRockerX,RightRockerY);
+
+                    while(!sendRockerData(0,0,RightRockerX,RightRockerY));
                     break;
             }
             return true;
@@ -275,16 +278,17 @@ public class MainActivity extends AppCompatActivity {
 
                     MainActivity.this.RightRockerY = -MainActivity.this.RightRockerY;
 
-                    Log.v("----Blue","POS-RIGHT---X:"+RightRockerX+"Y:"+RightRockerY);
+
                     sendRockerData(LeftRockerX,LeftRockerY,RightRockerX,RightRockerY);
                     break;
                 case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
                     MainActivity.this.wheelRightRocker.setTranslationX(0);
                     MainActivity.this.wheelRightRocker.setTranslationY(0);
                     MainActivity.this.RightRockerX = 0;
                     MainActivity.this.RightRockerY = 0;
 
-                    sendRockerData(LeftRockerX,LeftRockerY,0,0);
+                    while(!sendRockerData(0,0,RightRockerX,RightRockerY));
                     break;
             }
             return true;
@@ -666,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v("----Blue", "properties:" + properties);
     }
 
-    public void sendRockerData(int LeftX,int LeftY,int RightX,int RightY){
+    public boolean sendRockerData(int LeftX,int LeftY,int RightX,int RightY){
         int byteL = LeftX & 0XFF;
         int byteH = (LeftX & 0XFFFF) >>> 8;
         byte[] DataBuff = {
@@ -677,9 +681,6 @@ public class MainActivity extends AppCompatActivity {
                 ((byte) (RightY & 0XFF)),    ((byte) (RightY >> 8 & 0XFF)),
                 (byte) 0xBB, (byte) 0xBB,
         };
-
-
-
 
         BluetoothGattService service = mBluetoothGatt.getService(UUID.fromString(MainActivity.this.SERVICES_UUID));
         if (service == null) {
@@ -700,17 +701,16 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             //如果权限没获取就获取权限
             mBlueToothController.getPermissions(MainActivity.this);
-            return;
+            return false;
         }
         boolean result = mBluetoothGatt.writeCharacteristic(characteristic);
         Log.v("----Blue","status:"+result);
         if(result){
             Log.v("----Blue", "发送成功");
+            return true;
+        }else{
+            return false;
         }
-
-        int properties = characteristic.getProperties();//16
-        Log.v("----Blue", "properties:" + properties);
-
     }
 }
 
